@@ -8,19 +8,19 @@ pipeline {
                 git url:"https://github.com/LondheShubham153/django-notes-app.git", branch: "main"
             }
         }
-        stage("Build"){
+        stage("Building docker image"){
             steps {
                 echo "Building the image"
-                sh "docker build -t my-note-app ."
+                sh "sudo su docker build -t my-note-app ."
             }
         }
         stage("Push to Docker Hub"){
             steps {
                 echo "Pushing the image to docker hub"
-                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
-                sh "docker tag my-note-app ${env.dockerHubUser}/my-note-app:latest"
-                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                sh "docker push ${env.dockerHubUser}/my-note-app:latest"
+                withCredentials([usernamePassword(credentialsId:"DockerHub",passwordVariable:"DockerHubPass",usernameVariable:"DockerHubUser")]){
+                sh "sudo docker tag my-note-app ${env.dockerHubUser}/my-note-app:latest"
+                sh "sudo docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                sh "sudo docker push ${env.dockerHubUser}/my-note-app:latest"
                 }
             }
         }
